@@ -55,14 +55,14 @@ export const GameCard = ({ game, isSelected = false, onSelect, compact = false }
   return (
     <button
       onClick={onSelect}
-      className={`w-full text-left p-4 rounded-xl transition-all ${
+      className={`w-full text-left p-3 sm:p-4 rounded-xl transition-all ${
         isSelected
           ? 'bg-white border-2 border-blue-500 shadow-lg'
           : 'bg-white border border-gray-200 hover:border-gray-300 hover:shadow-md'
       }`}
     >
       {/* Status Badge */}
-      <div className="flex justify-between items-center mb-4">
+      <div className="flex justify-between items-center mb-3 sm:mb-4">
         {getStatusBadge()}
         {game.period && !isScheduled && (
           <span className="text-xs font-medium text-gray-500">

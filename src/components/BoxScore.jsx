@@ -68,10 +68,10 @@ export const BoxScore = ({ game, onClose }) => {
   const homePlayers = getActivePlayers(stats.homeTeamPlayers);
 
   const StatRow = ({ label, visitorValue, homeValue }) => (
-    <div className="flex justify-between items-center py-3 border-b border-gray-100 last:border-b-0">
-      <div className="w-24 text-right text-lg font-semibold text-gray-900">{visitorValue}</div>
-      <div className="flex-1 text-center text-sm font-medium text-gray-600">{label}</div>
-      <div className="w-24 text-left text-lg font-semibold text-gray-900">{homeValue}</div>
+    <div className="flex justify-between items-center py-2 sm:py-3 border-b border-gray-100 last:border-b-0">
+      <div className="w-16 sm:w-24 text-right text-base sm:text-lg font-semibold text-gray-900">{visitorValue}</div>
+      <div className="flex-1 text-center text-xs sm:text-sm font-medium text-gray-600">{label}</div>
+      <div className="w-16 sm:w-24 text-left text-base sm:text-lg font-semibold text-gray-900">{homeValue}</div>
     </div>
   );
 
@@ -148,84 +148,84 @@ export const BoxScore = ({ game, onClose }) => {
     <div className="h-full overflow-y-auto bg-white">
       {/* Header with Game Info */}
       <div className="sticky top-0 bg-white border-b border-gray-200 shadow-sm z-10">
-        <div className="p-6">
-          <div className="flex items-center justify-between mb-4">
-            <h2 className="text-2xl font-bold text-gray-900">Box Score</h2>
+        <div className="p-4 sm:p-6">
+          <div className="flex items-center justify-between mb-3 sm:mb-4">
+            <h2 className="text-xl sm:text-2xl font-bold text-gray-900">Box Score</h2>
             <button
               onClick={onClose}
               className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
               aria-label="Close box score"
             >
-              <svg className="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-5 h-5 sm:w-6 sm:h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
               </svg>
             </button>
           </div>
 
           {/* Game Score Header */}
-          <div className="grid grid-cols-3 gap-6 items-center">
+          <div className="grid grid-cols-3 gap-3 sm:gap-6 items-center">
             {/* Visitor Team */}
             <div className="text-center">
-              <div className="flex items-center justify-center gap-2 mb-3">
+              <div className="flex items-center justify-center gap-2 mb-2 sm:mb-3">
                 <img
                   src={getTeamLogoUrl(game.visitor_team.abbreviation)}
                   alt={game.visitor_team.abbreviation}
-                  className="w-16 h-16 object-contain"
+                  className="w-10 h-10 sm:w-16 sm:h-16 object-contain"
                 />
               </div>
-              <div className="font-bold text-gray-900 text-lg">{game.visitor_team.full_name}</div>
-              <div className="text-4xl font-bold text-gray-900 mt-3">{game.visitor_team_score}</div>
+              <div className="font-bold text-gray-900 text-xs sm:text-base md:text-lg truncate px-1">{game.visitor_team.full_name}</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mt-2 sm:mt-3">{game.visitor_team_score}</div>
             </div>
 
             {/* VS */}
             <div className="text-center">
-              <div className="text-sm font-semibold text-gray-500 uppercase tracking-wide">
+              <div className="text-xs sm:text-sm font-semibold text-gray-500 uppercase tracking-wide">
                 {game.status === 'final' ? 'Final' : game.status === 'live' ? 'Live' : 'vs'}
               </div>
               {game.period && game.status !== 'scheduled' && (
                 <div className="text-xs text-gray-400 mt-1 font-medium">
-                  {game.status === 'final' ? '' : `Quarter ${game.period}`}
+                  {game.status === 'final' ? '' : `Q${game.period}`}
                 </div>
               )}
             </div>
 
             {/* Home Team */}
             <div className="text-center">
-              <div className="flex items-center justify-center gap-2 mb-3">
+              <div className="flex items-center justify-center gap-2 mb-2 sm:mb-3">
                 <img
                   src={getTeamLogoUrl(game.home_team.abbreviation)}
                   alt={game.home_team.abbreviation}
-                  className="w-16 h-16 object-contain"
+                  className="w-10 h-10 sm:w-16 sm:h-16 object-contain"
                 />
               </div>
-              <div className="font-bold text-gray-900 text-lg">{game.home_team.full_name}</div>
-              <div className="text-4xl font-bold text-gray-900 mt-3">{game.home_team_score}</div>
+              <div className="font-bold text-gray-900 text-xs sm:text-base md:text-lg truncate px-1">{game.home_team.full_name}</div>
+              <div className="text-2xl sm:text-3xl md:text-4xl font-bold text-gray-900 mt-2 sm:mt-3">{game.home_team_score}</div>
             </div>
           </div>
         </div>
       </div>
 
       {/* Box Score Content */}
-      <div className="p-6 space-y-8">
+      <div className="p-4 sm:p-6 space-y-6 sm:space-y-8">
         {/* Team Stats Comparison */}
-        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 shadow-sm">
-          <h3 className="text-xl font-bold text-gray-900 mb-6 text-center">Team Statistics</h3>
-          <div className="mb-4 flex justify-between items-center text-sm font-semibold">
-            <div className="flex items-center gap-2">
+        <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-4 sm:p-6 shadow-sm">
+          <h3 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-6 text-center">Team Statistics</h3>
+          <div className="mb-3 sm:mb-4 flex justify-between items-center text-xs sm:text-sm font-semibold">
+            <div className="flex items-center gap-1 sm:gap-2">
               <img
                 src={getTeamLogoUrl(game.visitor_team.abbreviation)}
                 alt={game.visitor_team.abbreviation}
-                className="w-6 h-6 object-contain"
+                className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
               />
               <span className="text-gray-700">{game.visitor_team.abbreviation}</span>
             </div>
             <div className="flex-1"></div>
-            <div className="flex items-center gap-2">
+            <div className="flex items-center gap-1 sm:gap-2">
               <span className="text-gray-700">{game.home_team.abbreviation}</span>
               <img
                 src={getTeamLogoUrl(game.home_team.abbreviation)}
                 alt={game.home_team.abbreviation}
-                className="w-6 h-6 object-contain"
+                className="w-5 h-5 sm:w-6 sm:h-6 object-contain"
               />
             </div>
           </div>
@@ -267,21 +267,23 @@ export const BoxScore = ({ game, onClose }) => {
         {/* Visitor Team Player Stats */}
         {visitorPlayers.length > 0 && (
           <div>
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
               <img
                 src={getTeamLogoUrl(game.visitor_team.abbreviation)}
                 alt={game.visitor_team.abbreviation}
-                className="w-12 h-12 object-contain"
+                className="w-8 h-8 sm:w-12 sm:h-12 object-contain"
               />
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-base sm:text-xl font-bold text-gray-900 truncate">
                 {game.visitor_team.full_name}
               </h3>
             </div>
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 overflow-x-auto shadow-sm">
-              <PlayerTableHeader />
-              {visitorPlayers.map((player, idx) => (
-                <PlayerRow key={player.personId || idx} player={player} />
-              ))}
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-3 sm:p-6 overflow-x-auto shadow-sm">
+              <div className="min-w-[640px]">
+                <PlayerTableHeader />
+                {visitorPlayers.map((player, idx) => (
+                  <PlayerRow key={player.personId || idx} player={player} />
+                ))}
+              </div>
             </div>
           </div>
         )}
@@ -292,21 +294,23 @@ export const BoxScore = ({ game, onClose }) => {
         {/* Home Team Player Stats */}
         {homePlayers.length > 0 && (
           <div>
-            <div className="flex items-center gap-3 mb-4">
+            <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
               <img
                 src={getTeamLogoUrl(game.home_team.abbreviation)}
                 alt={game.home_team.abbreviation}
-                className="w-12 h-12 object-contain"
+                className="w-8 h-8 sm:w-12 sm:h-12 object-contain"
               />
-              <h3 className="text-xl font-bold text-gray-900">
+              <h3 className="text-base sm:text-xl font-bold text-gray-900 truncate">
                 {game.home_team.full_name}
               </h3>
             </div>
-            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-6 overflow-x-auto shadow-sm">
-              <PlayerTableHeader />
-              {homePlayers.map((player, idx) => (
-                <PlayerRow key={player.personId || idx} player={player} />
-              ))}
+            <div className="bg-gradient-to-br from-gray-50 to-gray-100 rounded-2xl p-3 sm:p-6 overflow-x-auto shadow-sm">
+              <div className="min-w-[640px]">
+                <PlayerTableHeader />
+                {homePlayers.map((player, idx) => (
+                  <PlayerRow key={player.personId || idx} player={player} />
+                ))}
+              </div>
             </div>
           </div>
         )}
