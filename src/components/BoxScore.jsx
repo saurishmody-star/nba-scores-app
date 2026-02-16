@@ -340,11 +340,29 @@ export const BoxScore = ({ game, onClose }) => {
         {visitorPlayers.length > 0 && (
           <div>
             <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-              <img
-                src={getTeamLogoUrl(game.visitor_team.abbreviation)}
-                alt={game.visitor_team.abbreviation}
-                className="w-8 h-8 sm:w-12 sm:h-12 object-contain"
-              />
+              {getTeamLogoUrl(game.visitor_team.abbreviation) ? (
+                <>
+                  <img
+                    src={getTeamLogoUrl(game.visitor_team.abbreviation)}
+                    alt={game.visitor_team.abbreviation}
+                    className="w-8 h-8 sm:w-12 sm:h-12 object-contain"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.parentElement.querySelector('.fallback-logo-player').style.display = 'flex';
+                    }}
+                  />
+                  <div
+                    className="fallback-logo-player w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold"
+                    style={{ display: 'none' }}
+                  >
+                    {game.visitor_team.abbreviation}
+                  </div>
+                </>
+              ) : (
+                <div className="w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold">
+                  {game.visitor_team.abbreviation}
+                </div>
+              )}
               <h3 className="text-base sm:text-xl font-bold text-gray-900 truncate">
                 {game.visitor_team.full_name}
               </h3>
@@ -367,11 +385,29 @@ export const BoxScore = ({ game, onClose }) => {
         {homePlayers.length > 0 && (
           <div>
             <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
-              <img
-                src={getTeamLogoUrl(game.home_team.abbreviation)}
-                alt={game.home_team.abbreviation}
-                className="w-8 h-8 sm:w-12 sm:h-12 object-contain"
-              />
+              {getTeamLogoUrl(game.home_team.abbreviation) ? (
+                <>
+                  <img
+                    src={getTeamLogoUrl(game.home_team.abbreviation)}
+                    alt={game.home_team.abbreviation}
+                    className="w-8 h-8 sm:w-12 sm:h-12 object-contain"
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                      e.target.parentElement.querySelector('.fallback-logo-player').style.display = 'flex';
+                    }}
+                  />
+                  <div
+                    className="fallback-logo-player w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold"
+                    style={{ display: 'none' }}
+                  >
+                    {game.home_team.abbreviation}
+                  </div>
+                </>
+              ) : (
+                <div className="w-8 h-8 sm:w-12 sm:h-12 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs sm:text-sm font-bold">
+                  {game.home_team.abbreviation}
+                </div>
+              )}
               <h3 className="text-base sm:text-xl font-bold text-gray-900 truncate">
                 {game.home_team.full_name}
               </h3>
