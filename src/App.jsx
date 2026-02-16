@@ -64,22 +64,24 @@ function App() {
       {/* Date Selector */}
       <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
 
-      {/* Main Content - Vertical Layout */}
-      <main className="flex-1 flex flex-col overflow-hidden">
-        {/* Top - Games List */}
-        <div className="bg-white border-b border-gray-200 shadow-sm">
-          <div className="p-4 sm:p-5">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 px-1">
+      {/* Main Content - Horizontal Layout */}
+      <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
+        {/* Left - Games List */}
+        <div className="w-full md:w-96 bg-white border-r border-gray-200 flex flex-col overflow-hidden">
+          <div className="p-4 sm:p-5 border-b border-gray-200">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900">
               {games.length > 0 ? `${games.length} ${games.length === 1 ? 'Game' : 'Games'}` : 'Today\'s Games'}
             </h2>
+          </div>
 
+          <div className="flex-1 overflow-y-auto p-4 sm:p-5 space-y-3">
             {/* Loading State */}
             {loading && (
-              <div className="flex gap-3 overflow-x-auto pb-2">
+              <>
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-gray-100 rounded-lg h-32 w-80 flex-shrink-0 animate-pulse"></div>
+                  <div key={i} className="bg-gray-100 rounded-lg h-32 animate-pulse"></div>
                 ))}
-              </div>
+              </>
             )}
 
             {/* Error State */}
@@ -90,20 +92,19 @@ function App() {
               </div>
             )}
 
-            {/* Games List - Vertical Layout */}
+            {/* Games List */}
             {!loading && !error && games.length > 0 && (
-              <div className="flex flex-col gap-3">
+              <>
                 {games.map((game) => (
-                  <div key={game.id}>
-                    <GameCard
-                      game={game}
-                      isSelected={selectedGame?.id === game.id}
-                      onSelect={() => setSelectedGame(game)}
-                      compact={true}
-                    />
-                  </div>
+                  <GameCard
+                    key={game.id}
+                    game={game}
+                    isSelected={selectedGame?.id === game.id}
+                    onSelect={() => setSelectedGame(game)}
+                    compact={true}
+                  />
                 ))}
-              </div>
+              </>
             )}
 
             {/* No Games State */}
@@ -121,7 +122,7 @@ function App() {
           </div>
         </div>
 
-        {/* Bottom - Box Score Content Area */}
+        {/* Right - Box Score Content Area */}
         <div className="flex-1 overflow-y-auto bg-gradient-to-br from-gray-50 to-gray-100">
           {selectedGame ? (
             <BoxScore game={selectedGame} onClose={() => setSelectedGame(null)} />
