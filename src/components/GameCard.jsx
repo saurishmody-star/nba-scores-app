@@ -1,6 +1,7 @@
+import { memo } from 'react';
 import { getTeamLogoUrl } from '../utils/teamLogos.jsx';
 
-export const GameCard = ({ game, isSelected = false, onSelect, compact = false }) => {
+const GameCardComponent = ({ game, isSelected = false, onSelect, compact = false }) => {
   // Determine game status
   const getGameStatus = () => {
     if (!game.status) {
@@ -77,22 +78,29 @@ export const GameCard = ({ game, isSelected = false, onSelect, compact = false }
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3 flex-1 min-w-0">
             {getTeamLogoUrl(game.visitor_team.abbreviation) ? (
-              <img
-                src={getTeamLogoUrl(game.visitor_team.abbreviation)}
-                alt={game.visitor_team.abbreviation}
-                className="w-10 h-10 object-contain flex-shrink-0"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'flex';
-                }}
-              />
-            ) : null}
-            <div
-              className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-              style={{ display: getTeamLogoUrl(game.visitor_team.abbreviation) ? 'none' : 'flex' }}
-            >
-              {game.visitor_team.abbreviation}
-            </div>
+              <>
+                <img
+                  src={getTeamLogoUrl(game.visitor_team.abbreviation)}
+                  alt={game.visitor_team.abbreviation}
+                  className="w-10 h-10 object-contain flex-shrink-0"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentElement.querySelector('.fallback-logo').style.display = 'flex';
+                  }}
+                />
+                <div
+                  className="fallback-logo w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                  style={{ display: 'none' }}
+                >
+                  {game.visitor_team.abbreviation}
+                </div>
+              </>
+            ) : (
+              <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                {game.visitor_team.abbreviation}
+              </div>
+            )}
             <div className="truncate">
               <div className="font-semibold text-gray-900">
                 {game.visitor_team.name}
@@ -113,22 +121,29 @@ export const GameCard = ({ game, isSelected = false, onSelect, compact = false }
         <div className="flex justify-between items-center">
           <div className="flex items-center gap-3 flex-1 min-w-0">
             {getTeamLogoUrl(game.home_team.abbreviation) ? (
-              <img
-                src={getTeamLogoUrl(game.home_team.abbreviation)}
-                alt={game.home_team.abbreviation}
-                className="w-10 h-10 object-contain flex-shrink-0"
-                onError={(e) => {
-                  e.target.style.display = 'none';
-                  e.target.nextSibling.style.display = 'flex';
-                }}
-              />
-            ) : null}
-            <div
-              className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
-              style={{ display: getTeamLogoUrl(game.home_team.abbreviation) ? 'none' : 'flex' }}
-            >
-              {game.home_team.abbreviation}
-            </div>
+              <>
+                <img
+                  src={getTeamLogoUrl(game.home_team.abbreviation)}
+                  alt={game.home_team.abbreviation}
+                  className="w-10 h-10 object-contain flex-shrink-0"
+                  loading="lazy"
+                  onError={(e) => {
+                    e.target.style.display = 'none';
+                    e.target.parentElement.querySelector('.fallback-logo').style.display = 'flex';
+                  }}
+                />
+                <div
+                  className="fallback-logo w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0"
+                  style={{ display: 'none' }}
+                >
+                  {game.home_team.abbreviation}
+                </div>
+              </>
+            ) : (
+              <div className="w-10 h-10 bg-gradient-to-br from-red-500 to-red-600 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0">
+                {game.home_team.abbreviation}
+              </div>
+            )}
             <div className="truncate">
               <div className="font-semibold text-gray-900">
                 {game.home_team.name}
@@ -157,3 +172,15 @@ export const GameCard = ({ game, isSelected = false, onSelect, compact = false }
     </button>
   );
 };
+
+// Memoize component to prevent unnecessary re-renders
+// Only re-render if game data, selection status, or scores change
+export const GameCard = memo(GameCardComponent, (prevProps, nextProps) => {
+  return (
+    prevProps.game.id === nextProps.game.id &&
+    prevProps.isSelected === nextProps.isSelected &&
+    prevProps.game.home_team_score === nextProps.game.home_team_score &&
+    prevProps.game.visitor_team_score === nextProps.game.visitor_team_score &&
+    prevProps.game.status === nextProps.game.status
+  );
+});

@@ -64,20 +64,20 @@ function App() {
       {/* Date Selector */}
       <DateSelector selectedDate={selectedDate} onDateChange={setSelectedDate} />
 
-      {/* Main Content - Two Column Layout */}
-      <main className="flex-1 flex flex-col md:flex-row overflow-hidden">
-        {/* Left Sidebar - Games List */}
-        <aside className="w-full md:w-80 lg:w-96 bg-white border-b md:border-b-0 md:border-r border-gray-200 overflow-y-auto shadow-sm">
+      {/* Main Content - Vertical Layout */}
+      <main className="flex-1 flex flex-col overflow-hidden">
+        {/* Top - Games List */}
+        <div className="bg-white border-b border-gray-200 shadow-sm">
           <div className="p-4 sm:p-5">
-            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 sm:mb-5 px-1">
+            <h2 className="text-lg sm:text-xl font-bold text-gray-900 mb-4 px-1">
               {games.length > 0 ? `${games.length} ${games.length === 1 ? 'Game' : 'Games'}` : 'Today\'s Games'}
             </h2>
 
             {/* Loading State */}
             {loading && (
-              <div className="space-y-3">
+              <div className="flex gap-3 overflow-x-auto pb-2">
                 {[1, 2, 3].map((i) => (
-                  <div key={i} className="bg-gray-100 rounded-lg h-24 animate-pulse"></div>
+                  <div key={i} className="bg-gray-100 rounded-lg h-32 w-80 flex-shrink-0 animate-pulse"></div>
                 ))}
               </div>
             )}
@@ -90,37 +90,38 @@ function App() {
               </div>
             )}
 
-            {/* Games List */}
+            {/* Games List - Vertical Layout */}
             {!loading && !error && games.length > 0 && (
-              <div className="space-y-3">
+              <div className="flex flex-col gap-3">
                 {games.map((game) => (
-                  <GameCard
-                    key={game.id}
-                    game={game}
-                    isSelected={selectedGame?.id === game.id}
-                    onSelect={() => setSelectedGame(game)}
-                    compact={true}
-                  />
+                  <div key={game.id}>
+                    <GameCard
+                      game={game}
+                      isSelected={selectedGame?.id === game.id}
+                      onSelect={() => setSelectedGame(game)}
+                      compact={true}
+                    />
+                  </div>
                 ))}
               </div>
             )}
 
             {/* No Games State */}
             {!loading && !error && games.length === 0 && (
-              <div className="text-center py-16 px-6">
-                <div className="w-20 h-20 mx-auto mb-4 bg-gray-100 rounded-full flex items-center justify-center">
-                  <svg className="w-10 h-10 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div className="text-center py-8 px-6">
+                <div className="w-16 h-16 mx-auto mb-3 bg-gray-100 rounded-full flex items-center justify-center">
+                  <svg className="w-8 h-8 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" />
                   </svg>
                 </div>
-                <div className="text-gray-900 font-semibold text-lg mb-2">No games scheduled</div>
+                <div className="text-gray-900 font-semibold text-base mb-1">No games scheduled</div>
                 <div className="text-gray-500 text-sm">Try selecting a different date</div>
               </div>
             )}
           </div>
-        </aside>
+        </div>
 
-        {/* Right Content Area - Box Score */}
+        {/* Bottom - Box Score Content Area */}
         <div className="flex-1 overflow-y-auto bg-gradient-to-br from-gray-50 to-gray-100">
           {selectedGame ? (
             <BoxScore game={selectedGame} onClose={() => setSelectedGame(null)} />

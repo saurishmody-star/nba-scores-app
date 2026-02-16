@@ -12,6 +12,30 @@ app.use(express.json());
 const NBA_CDN_BASE = 'https://cdn.nba.com/static/json/liveData';
 const NBA_STATS_BASE = 'https://stats.nba.com/stats';
 
+// Simple in-memory cache
+const cache = new Map();
+const CACHE_TTL_TODAY = 10000; // 10 seconds for today's games (live updates)
+const CACHE_TTL_HISTORICAL = 300000; // 5 minutes for historical games (don't change)
+const CACHE_TTL_BOXSCORE = 15000; // 15 seconds for box scores
+
+// Cache helper functions
+function getCacheKey(prefix, identifier) {
+  return `${prefix}_${identifier}`;
+}
+
+function getCachedData(key) {
+  const cached = cache.get(key);
+  if (cached && Date.now() - cached.timestamp < cached.ttl) {
+    return cached.data;
+  }
+  cache.delete(key); // Remove expired cache
+  return null;
+}
+
+function setCachedData(key, data, ttl) {
+  cache.set(key, { data, timestamp: Date.now(), ttl });
+}
+
 // Helper function to fetch from NBA CDN
 async function fetchFromNBACDN(endpoint) {
   const url = `${NBA_CDN_BASE}${endpoint}`;
@@ -56,6 +80,16 @@ async function fetchFromNBAStats(endpoint, params = {}) {
 app.get('/api/scoreboard', async (req, res) => {
   try {
     const { date } = req.query;
+    const cacheKey = getCacheKey('scoreboard', date || 'today');
+
+    // Check cache first
+    const cachedData = getCachedData(cacheKey);
+    if (cachedData) {
+      console.log(`✅ Cache HIT: ${cacheKey}`);
+      return res.json(cachedData);
+    }
+
+    console.log(`❌ Cache MISS: ${cacheKey} - Fetching from NBA API...`);
 
     if (date) {
       // Use stats.nba.com API for specific dates
@@ -70,10 +104,17 @@ app.get('/api/scoreboard', async (req, res) => {
       });
 
       // Transform the stats API response to match CDN format
-      res.json(transformStatsAPIResponse(data));
+      const transformed = transformStatsAPIResponse(data);
+
+      // Cache historical games for longer (they don't change)
+      setCachedData(cacheKey, transformed, CACHE_TTL_HISTORICAL);
+      res.json(transformed);
     } else {
       // Use CDN for today's games
       const data = await fetchFromNBACDN('/scoreboard/todaysScoreboard_00.json');
+
+      // Cache today's games for shorter time (live updates)
+      setCachedData(cacheKey, data, CACHE_TTL_TODAY);
       res.json(data);
     }
   } catch (error) {
@@ -165,7 +206,21 @@ function transformStatsAPIResponse(statsData) {
 app.get('/api/boxscore/:gameId', async (req, res) => {
   try {
     const { gameId } = req.params;
+    const cacheKey = getCacheKey('boxscore', gameId);
+
+    // Check cache first
+    const cachedData = getCachedData(cacheKey);
+    if (cachedData) {
+      console.log(`✅ Cache HIT: ${cacheKey}`);
+      return res.json(cachedData);
+    }
+
+    console.log(`❌ Cache MISS: ${cacheKey} - Fetching from NBA API...`);
+
     const data = await fetchFromNBACDN(`/boxscore/boxscore_${gameId}.json`);
+
+    // Cache box score data
+    setCachedData(cacheKey, data, CACHE_TTL_BOXSCORE);
     res.json(data);
   } catch (error) {
     console.error('Error fetching box score:', error);
